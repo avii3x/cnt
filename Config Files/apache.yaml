@@ -1,0 +1,15 @@
+#cloud-config 
+packages: 
+  - apache2  
+write_files: 
+ - content: | 
+     <html> 
+     <body> 
+      <h1>Uber Mich</h1> 
+       <ul> 
+       <li><a href="/Ich">Ich</a></li> 
+       <li><a href="/Arbeit">Arbeit</a></li> 
+       <li><a href="/Schule">Schule</a></li> 
+       </ul> 
+     </body> 
+    </html> 
