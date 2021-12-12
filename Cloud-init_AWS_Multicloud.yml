@@ -1,0 +1,32 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    home: /home/ubuntu
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: 'password'
+    ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDsVoNuQ1NztHkenJRDW64aIyhdTIpad9juJFZDdHrKa9lwCCqKYEwDGnFObs0y3C3cDCGnNQ4S8ZsVR7ZxMer7YSsKxJ4UYj0EO/dMfqXZ6HQ2wGOA7RX3PA9acC99nZZ5XZCX0Y54DmdbAjVq1I5nKE/t0rjGFMZQYBRyZJ+II6w3vAmf0PVEdDJ8iPuLZR73r6YOWKIxXcKxmluvOziNx7r2m+jI+v0ZLRVE+Uw4oN1YFGbcEqMLRbmTn7vC1eNTQyIpiOhAlUuWa9dYFQufK44FwLmW8Rn4Dzl3paSvpSNMutZv0kS4MSSKckhO8FEeQYd9reZ3wFXXtHRBoDDS3pKa5Krsjb1T738jueLr/yREwRDZdnTU/DtGWTE4FBqR5xVelgOrB8ZkKuijU2z1nPsqmFvX+WsbLnbUlRRbYExGJzG0bUGQgbp9ByBfE/Hnj73w8pITQnFQMeCqieX5DBNUPVaTOYJ/uFbrJ898ehnOc0QZGKEeWkE89Mr3D5U= Boban
+# login ssh and console with password
+ssh_pwauth: true
+disable_root: false    
+packages:
+  - wireguard
+write_files:
+ - content: |
+    [Interface]
+    Address = 10.3.38.22/24
+    PrivateKey = EMtpHkFmPWn8pM7VvK4pQi3xRA/ohUsi/mWCe/cDH3Q=
+    [Peer]
+    PublicKey = A1M+g2YKbHVKipzcNCCcghzlejtzZEX2GIESilO+rkY=
+    AllowedIPs = 10.3.38.0/24
+    Endpoint = 10.0.40.8:51903
+
+    PersistentKeepalive = 25
+   path: /etc/wireguard/wg0.conf
+   permissions: '0640'
+runcmd:
+  - sudo systemctl enable wg-quick@wg0.service
+  - sudo systemctl start wg-quick@wg0.service
