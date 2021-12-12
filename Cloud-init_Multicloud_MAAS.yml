@@ -1,0 +1,35 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    home: /home/ubuntu
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: 'password'
+    ssh_import_id:
+    - gh:avii3x
+    ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCibBPFnWCzOA6nrEvGB4V9KQqLOP0e8R9t3DcUlNEkib/AQPPmMC2gbsowpeWMUQAOhIPekZ5lsin7cHdRgGJ7mbKYVCHF6JUomZJp6vhYMN0H3bBJcOhc3bQJs01eK6L/xPkJKPnQAP+A5chDraGscO3+Mlo9K0qlqI0L961lpVmPSJSL35OAfRJFw6UuxwckShZ/ORdAcc2LyjTBGcD8MZ59dtwONzVRRH8KkK8eYsFHpGwe4M+e/SUuA8T2wVQGE07UlZ4tDAA9ZG+vvhkNnADc0BIWGqzTO7TloBjBLJz9cypiZkHZzq8jXj+tqcsYIlaiaY35SDlW88Viicg1sRjgIq2hnxGWYICKRw67cG9azU/MoIrB2TEuuVslU6ek7l8G9WzQENz4Ire92Gsc9i8lbHDlfi+EEGIPfAOAj1/PiA+Hi6o9lCKgmAY+iGZBbBxYkb30m2U9ZAuzqvgmytRdShPCL7Jdq30oXNI9ccandLBsZSsrYzw6dpPbEQk= ubuntu@cloud-hf-01
+      ubuntu@cloud-hf-01
+# login ssh and console with password
+ssh_pwauth: true
+disable_root: false    
+packages:
+  - wireguard
+write_files:
+ - content: |
+    [Interface]
+    Address = 10.3.38.20/24
+    PrivateKey = UKPReI8n4UEufC5XEhrbksOEEQQRPK/mye24jGy/A2Y=
+    [Peer]
+    PublicKey = A1M+g2YKbHVKipzcNCCcghzlejtzZEX2GIESilO+rkY=
+    AllowedIPs = 10.3.38.0/24
+    Endpoint = cloud.tbz.ch:51903
+
+    PersistentKeepalive = 25
+   path: /etc/wireguard/wg0.conf
+   permissions: '0640'
+runcmd:
+  - sudo systemctl enable wg-quick@wg0.service
+  - sudo systemctl start wg-quick@wg0.service
